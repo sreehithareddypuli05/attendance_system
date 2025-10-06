@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance{% endblock %}
+{% block content %}
+
+<style>
+.mark-header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+.mark-header h2 {
+color: #667eea;
+margin-bottom: 10px;
+}
+
+.instructions {
+background: linear-gradient(135deg, #e0e7ff 0%, #f3e7ff 100%);
+padding: 15px 25px;
+border-radius: 12px;
+margin-bottom: 30px;
+text-align: center;
+color: #5b21b6;
+font-weight: 500;
+box-shadow: 0 3px 10px rgba(102, 126, 234, 0.1);
+}
+
+.attendance-form {
+width: 100%;
+}
+
+.mark-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+border-radius: 12px;
+overflow: hidden;
+}
+
+.mark-table thead {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.mark-table th {
+color: white;
+padding: 18px 15px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 1em;
+}
+
+.mark-table tbody tr {
+transition: all 0.3s ease;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.mark-table tbody tr:hover {
+background-color: #f5f7fa;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mark-table tbody tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+.mark-table td {
+padding: 18px 15px;
+text-align: center;
+}
+
+.mark-table td:first-child {
+text-align: left;
+font-weight: 600;
+color: #333;
+font-size: 1.05em;
+padding-left: 25px;
+}
+
+/* Custom Radio Buttons */
+.radio-group {
+display: flex;
+justify-content: center;
+gap: 10px;
+align-items: center;
+}
+
+.radio-wrapper {
+position: relative;
+display: flex;
+align-items: center;
+gap: 8px;
+cursor: pointer;
+padding: 8px 15px;
+border-radius: 8px;
+transition: all 0.3s ease;
+}
+
+.radio-wrapper:hover {
+background-color: #f0f0f0;
+}
+
+.radio-wrapper input[type="radio"] {
+appearance: none;
+width: 22px;
+height: 22px;
+border: 2px solid #ddd;
+border-radius: 50%;
+cursor: pointer;
+position: relative;
+transition: all 0.3s ease;
+margin: 0;
+}
+
+.radio-wrapper input[type="radio"]:hover {
+border-color: #667eea;
+}
+
+.radio-wrapper input[type="radio"]:checked {
+border-color: #667eea;
+background-color: #667eea;
+}
+
+.radio-wrapper input[type="radio"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+font-size: 14px;
+font-weight: bold;
+}
+
+.radio-label {
+font-size: 0.95em;
+font-weight: 500;
+color: #555;
+cursor: pointer;
+user-select: none;
+}
+
+.radio-wrapper.present-option input[type="radio"]:checked {
+border-color: #2e7d32;
+background-color: #2e7d32;
+}
+
+.radio-wrapper.absent-option input[type="radio"]:checked {
+border-color: #c62828;
+background-color: #c62828;
+}
+
+/* Submit Button */
+.submit-section {
+text-align: center;
+margin-top: 30px;
+padding: 20px;
+}
+
+.submit-btn {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+border: none;
+padding: 15px 50px;
+font-size: 1.1em;
+font-weight: 600;
+border-radius: 30px;
+cursor: pointer;
+transition: all 0.3s ease;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.submit-btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.submit-btn:active {
+transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+background: #ccc;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.mark-table tbody tr {
+animation: fadeInUp 0.5s ease-in-out;
+}
+
+.mark-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.mark-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.mark-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.mark-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.mark-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.mark-table th,
+.mark-table td {
+padding: 12px 10px;
+font-size: 0.9em;
+}
+
+.mark-table td:first-child {
+padding-left: 15px;
+font-size: 0.95em;
+}
+
+.radio-wrapper {
+padding: 6px 10px;
+}
+
+.radio-wrapper input[type="radio"] {
+width: 20px;
+height: 20px;
+}
+
+.radio-label {
+font-size: 0.85em;
+}
+
+.submit-btn {
+padding: 12px 40px;
+font-size: 1em;
+}
+
+.instructions {
+padding: 12px 20px;
+font-size: 0.9em;
+}
+}
+
+@media (max-width: 480px) {
+.mark-table {
+font-size: 0.85em;
+}
+
+.mark-table th {
+padding: 12px 8px;
+font-size: 0.85em;
+}
+
+.mark-table td {
+padding: 10px 5px;
+}
+
+.mark-table td:first-child {
+padding-left: 10px;
+}
+
+.radio-group {
+flex-direction: column;
+gap: 5px;
+}
+
+.radio-wrapper {
+width: 100%;
+justify-content: center;
+}
+
+.submit-btn {
+width: 100%;
+padding: 15px 20px;
+}
+
+.submit-section {
+padding: 15px 0;
+}
+}
+
+/* Empty State */
+.no-students {
+text-align: center;
+padding: 60px 20px;
+color: #999;
+}
+
+.no-students-icon {
+font-size: 4em;
+margin-bottom: 20px;
+}
+
+.no-students-text {
+font-size: 1.3em;
+color: #666;
+}
+</style>
+
+<div class="mark-header">
+<h2>✏️ Mark Attendance</h2>
+<div class="instructions">
+📝 Select Present or Absent for each student, then click Submit
+</div>
+</div>
+
+{% if students %}
+<form method="POST" class="attendance-form">
+{% csrf_token %}
+<table class="mark-table">
+<thead>
+<tr>
+<th>Student Name</th>
+<th>Present</th>
+<th>Absent</th>
+</tr>
+</thead>
+<tbody>
+{% for student in students %}
+<tr>
+<td>{{ student }}</td>
+<td>
+<div class="radio-group">
+<label class="radio-wrapper present-option">
+<input type="radio" name="{{ student }}" value="Present" required>
+<span class="radio-label">✅ Present</span>
+</label>
+</div>
+</td>
+<td>
+<div class="radio-group">
+<label class="radio-wrapper absent-option">
+<input type="radio" name="{{ student }}" value="Absent" required>
+<span class="radio-label">❌ Absent</span>
+</label>
+</div>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="submit-section">
+<button type="submit" class="submit-btn">
+📋 Submit Attendance
+</button>
+</div>
+</form>
+{% else %}
+<div class="no-students">
+<div class="no-students-icon">👥</div>
+<p class="no-students-text">No students available to mark attendance.</p>
+</div>
+{% endif %}
+
+<script>
+// Optional: Add form validation feedback
+document.addEventListener('DOMContentLoaded', function() {
+const form = document.querySelector('.attendance-form');
+if (form) {
+form.addEventListener('submit', function(e) {
+const submitBtn = this.querySelector('.submit-btn');
+submitBtn.textContent = '⏳ Submitting...';
+submitBtn.disabled = true;
+});
+}
+});
+</script>
+
+{% endblock %}

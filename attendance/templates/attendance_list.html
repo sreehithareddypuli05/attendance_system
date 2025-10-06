@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Attendance List{% endblock %}
+{% block content %}
+{% load dict_extras %}
+
+<style>
+.list-header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+.date-badge {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+display: inline-block;
+padding: 12px 30px;
+border-radius: 30px;
+font-size: 1.2em;
+font-weight: 600;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+margin-top: 10px;
+}
+
+.attendance-list-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+border-radius: 12px;
+overflow: hidden;
+}
+
+.attendance-list-table thead {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.attendance-list-table th {
+color: white;
+padding: 18px 20px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 1em;
+}
+
+.attendance-list-table tbody tr {
+transition: all 0.3s ease;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.attendance-list-table tbody tr:hover {
+background-color: #f5f7fa;
+transform: translateX(5px);
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.attendance-list-table tbody tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+.attendance-list-table td {
+padding: 18px 20px;
+text-align: center;
+}
+
+.attendance-list-table td:first-child {
+text-align: left;
+font-weight: 600;
+color: #333;
+font-size: 1.05em;
+}
+
+.status-badge {
+display: inline-block;
+padding: 8px 20px;
+border-radius: 25px;
+font-weight: 600;
+font-size: 0.95em;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.status-present {
+background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+color: white;
+box-shadow: 0 3px 10px rgba(17, 153, 142, 0.3);
+}
+
+.status-absent {
+background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+color: white;
+box-shadow: 0 3px 10px rgba(235, 51, 73, 0.3);
+}
+
+.status-icon {
+margin-right: 5px;
+font-size: 1.1em;
+}
+
+.no-records {
+text-align: center;
+padding: 60px 20px;
+color: #999;
+}
+
+.no-records-icon {
+font-size: 4em;
+margin-bottom: 20px;
+}
+
+.no-records-text {
+font-size: 1.3em;
+color: #666;
+}
+
+/* Animation */
+@keyframes slideIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.attendance-list-table tbody tr {
+animation: slideIn 0.5s ease-in-out;
+}
+
+.attendance-list-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.attendance-list-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.attendance-list-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.attendance-list-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.attendance-list-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.attendance-list-table th,
+.attendance-list-table td {
+padding: 12px 10px;
+font-size: 0.9em;
+}
+
+.date-badge {
+font-size: 1em;
+padding: 10px 20px;
+}
+
+.status-badge {
+padding: 6px 15px;
+font-size: 0.85em;
+}
+
+.no-records-icon {
+font-size: 3em;
+}
+
+.no-records-text {
+font-size: 1.1em;
+}
+}
+
+@media (max-width: 480px) {
+.attendance-list-table {
+font-size: 0.85em;
+}
+
+.attendance-list-table th,
+.attendance-list-table td {
+padding: 10px 8px;
+}
+
+.status-badge {
+padding: 5px 12px;
+font-size: 0.8em;
+}
+}
+</style>
+
+<div class="list-header">
+<h2>📋 Attendance List</h2>
+<div class="date-badge">📅 {{ date }}</div>
+</div>
+
+{% if students %}
+<table class="attendance-list-table">
+<thead>
+<tr>
+<th>Student Name</th>
+<th>Attendance Status</th>
+</tr>
+</thead>
+<tbody>
+{% for student in students %}
+<tr>
+<td>{{ student }}</td>
+<td>
+{% with status=attendance|get_item:student %}
+{% if status == "Present" %}
+<span class="status-badge status-present">
+<span class="status-icon">✅</span> Present
+</span>
+{% elif status == "Absent" %}
+<span class="status-badge status-absent">
+<span class="status-icon">❌</span> Absent
+</span>
+{% else %}
+<span class="status-badge" style="background: #e0e0e0; color: #666;">
+<span class="status-icon">❓</span> Not Marked
+</span>
+{% endif %}
+{% endwith %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+<div class="no-records">
+<div class="no-records-icon">📭</div>
+<p class="no-records-text">No students found for this date.</p>
+</div>
+{% endif %}
+
+{% endblock %}

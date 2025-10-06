@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Attendance System{% endblock %}</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+min-height: 100vh;
+padding: 20px;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+background: white;
+border-radius: 15px;
+box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+overflow: hidden;
+}
+
+header {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 30px;
+text-align: center;
+}
+
+header h1 {
+font-size: 2.5em;
+margin-bottom: 20px;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+nav {
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
+gap: 15px;
+}
+
+nav a {
+color: white;
+text-decoration: none;
+padding: 10px 20px;
+background: rgba(255, 255, 255, 0.2);
+border-radius: 25px;
+transition: all 0.3s ease;
+font-weight: 500;
+}
+
+nav a:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: translateY(-2px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Success Message */
+#message {
+position: fixed;
+top: 20px;
+right: -350px;
+background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+color: white;
+padding: 20px 30px;
+border-radius: 10px;
+transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+z-index: 1000;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+font-weight: 600;
+font-size: 1.1em;
+}
+
+#message.show {
+right: 20px;
+}
+
+/* Content Area */
+.content {
+padding: 40px;
+}
+
+.content h2 {
+color: #667eea;
+margin-bottom: 30px;
+font-size: 2em;
+text-align: center;
+}
+
+/* Table Styling */
+table {
+border-collapse: collapse;
+width: 100%;
+margin-top: 20px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+border-radius: 10px;
+overflow: hidden;
+}
+
+thead {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+}
+
+th {
+padding: 15px;
+text-align: center;
+font-weight: 600;
+font-size: 1.1em;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+td {
+padding: 12px 15px;
+text-align: center;
+border-bottom: 1px solid #f0f0f0;
+}
+
+tbody tr {
+transition: all 0.3s ease;
+}
+
+tbody tr:hover {
+background-color: #f8f9fa;
+transform: scale(1.01);
+}
+
+tbody tr:nth-child(even) {
+background-color: #f9f9f9;
+}
+
+td:first-child {
+font-weight: 600;
+color: #333;
+text-align: left;
+}
+
+td.present {
+background-color: #c8e6c9;
+color: #2e7d32;
+font-weight: bold;
+}
+
+td.absent {
+background-color: #ffcdd2;
+color: #c62828;
+font-weight: bold;
+}
+
+/* Emoji styling */
+td {
+font-size: 1.2em;
+}
+
+/* Footer */
+footer {
+background: #f8f9fa;
+padding: 20px;
+text-align: center;
+color: #666;
+border-top: 2px solid #e0e0e0;
+}
+
+footer p {
+margin: 0;
+font-size: 0.9em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+body {
+padding: 10px;
+}
+
+header h1 {
+font-size: 1.8em;
+}
+
+.content {
+padding: 20px;
+}
+
+nav {
+flex-direction: column;
+align-items: center;
+}
+
+nav a {
+width: 100%;
+text-align: center;
+}
+
+table {
+font-size: 0.9em;
+}
+
+th, td {
+padding: 8px;
+}
+
+#message {
+right: -300px;
+padding: 15px 20px;
+font-size: 1em;
+}
+}
+
+/* Week Info Badge */
+.week-info {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+display: inline-block;
+padding: 10px 25px;
+border-radius: 25px;
+margin-bottom: 20px;
+font-weight: 600;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Animation for table rows */
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+tbody tr {
+animation: fadeIn 0.5s ease-in-out;
+}
+
+tbody tr:nth-child(1) { animation-delay: 0.1s; }
+tbody tr:nth-child(2) { animation-delay: 0.2s; }
+tbody tr:nth-child(3) { animation-delay: 0.3s; }
+tbody tr:nth-child(4) { animation-delay: 0.4s; }
+tbody tr:nth-child(5) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>📋 Attendance System</h1>
+<nav>
+<a href="{% url 'home' %}">🏠 Home</a>
+<a href="{% url 'mark_attendance' %}">✏️ Mark Attendance</a>
+<a href="{% url 'attendance_list' %}">📊 Attendance List</a>
+<a href="{% url 'weekly_summary' %}">📅 Weekly Summary</a>
+<a href="{% url 'monthly_summary' %}">📆 Monthly Summary</a>
+</nav>
+</header>
+
+
+
+<!-- Content Block -->
+<div class="content">
+{% block content %}{% endblock %}
+</div>
+
+<footer>
+<p>&copy; 2025 My Attendance System | All Rights Reserved</p>
+</footer>
+</div>
+
+{% if submitted %}
+<script>
+let msg = document.getElementById("message");
+msg.classList.add("show");
+setTimeout(() => { msg.classList.remove("show"); }, 3000);
+</script>
+{% endif %}
+</body>
+</html>

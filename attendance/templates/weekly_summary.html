@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}Weekly Attendance Summary{% endblock %}
+{% block content %}
+<style>
+.summary-header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+.week-badge {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+display: inline-block;
+padding: 12px 30px;
+border-radius: 30px;
+font-size: 1.2em;
+font-weight: 600;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+margin-bottom: 20px;
+}
+
+.weekly-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+border-radius: 12px;
+overflow: hidden;
+}
+
+.weekly-table thead {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.weekly-table th {
+color: white;
+padding: 18px 15px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 0.95em;
+}
+
+.weekly-table th:first-child {
+text-align: left;
+padding-left: 25px;
+}
+
+.weekly-table tbody tr {
+transition: all 0.3s ease;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.weekly-table tbody tr:hover {
+background-color: #f5f7fa;
+transform: translateX(5px);
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.weekly-table tbody tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+.weekly-table td {
+padding: 15px;
+text-align: center;
+font-size: 1.3em;
+}
+
+.weekly-table td:first-child {
+text-align: left;
+font-weight: 600;
+color: #333;
+padding-left: 25px;
+font-size: 1.05em;
+}
+
+.status-present {
+color: #2e7d32;
+background: #e8f5e9;
+padding: 8px 12px;
+border-radius: 8px;
+display: inline-block;
+min-width: 40px;
+}
+
+.status-absent {
+color: #c62828;
+background: #ffebee;
+padding: 8px 12px;
+border-radius: 8px;
+display: inline-block;
+min-width: 40px;
+}
+
+.status-empty {
+color: #9e9e9e;
+font-size: 1.5em;
+}
+
+/* Statistics Section */
+.stats-container {
+display: flex;
+justify-content: space-around;
+flex-wrap: wrap;
+margin-bottom: 30px;
+gap: 20px;
+}
+
+.stat-card {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 20px 30px;
+border-radius: 15px;
+text-align: center;
+box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+min-width: 150px;
+transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.stat-value {
+font-size: 2.5em;
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.stat-label {
+font-size: 0.9em;
+opacity: 0.9;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+.weekly-table th,
+.weekly-table td {
+padding: 10px 8px;
+font-size: 0.9em;
+}
+
+.weekly-table td:first-child {
+padding-left: 15px;
+}
+
+.week-badge {
+font-size: 1em;
+padding: 10px 20px;
+}
+
+.stats-container {
+flex-direction: column;
+}
+
+.stat-card {
+width: 100%;
+}
+}
+</style>
+
+<div class="summary-header">
+<h2>📅 Weekly Attendance Summary</h2>
+<div class="week-badge">{{ week }}</div>
+</div>
+
+<!-- Optional: Add statistics cards here if you calculate them in your view -->
+<!-- 
+<div class="stats-container">
+<div class="stat-card">
+<div class="stat-value">{{ total_students }}</div>
+<div class="stat-label">Total Students</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">{{ avg_attendance }}%</div>
+<div class="stat-label">Avg Attendance</div>
+</div>
+</div>
+-->
+
+<table class="weekly-table">
+<thead>
+<tr>
+<th>Student Name</th>
+{% for day in days %}
+<th>{{ day }}</th>
+{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for student, records in report.items %}
+<tr>
+<td>{{ student }}</td>
+{% for day in days %}
+<td>
+{% if records.day %}
+{% if records.day == "Present" %}
+<span class="status-present">✅</span>
+{% elif records.day == "Absent" %}
+<span class="status-absent">❌</span>
+{% endif %}
+{% else %}
+<span class="status-empty">-</span>
+{% endif %}
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% if not report %}
+<div style="text-align: center; padding: 40px; color: #999;">
+<p style="font-size: 1.2em;">📭 No attendance records found for this week.</p>
+</div>
+{% endif %}
+
+{% endblock %}
